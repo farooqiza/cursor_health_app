@@ -1,0 +1,81 @@
+<context>
+# Overview
+This document outlines the requirements for a DHA-compliant healthcare website aimed at users in Dubai. The platform will provide transparent pricing for medical services, an AI-powered assistant for general health inquiries, and personalized insurance recommendations. The primary goal is to empower users to make informed healthcare decisions by providing accessible and reliable information in a user-friendly interface, built using Next.js.
+
+# Core Features
+1.  **AI-Powered Health Assistant**
+    -   **Description:** An LLM-based chatbot, powered by the OpenAI API, that answers users' health-related questions.
+    -   **Functionality:** It will provide basic, reliable, and non-diagnostic health advice. Crucially, every response will include a disclaimer stating that the assistant is not a licensed physician and its advice should not be considered a medical diagnosis.
+    -   **Goal:** To offer users immediate and accessible general health information.
+
+2.  **Transparent Procedure & Visit Pricing**
+    -   **Description:** A tool for users to find and compare the costs of medical procedures and visits across different clinics in Dubai.
+    -   **Functionality:**
+        -   Accesses a proprietary Google Sheet via an API to pull pricing data (Fields: Clinic Name, Service, Cash Price, Insured Price, Insurance Accepted, Location).
+        -   If data is not found in the Google Sheet, it will automatically search the web for DHA-compliant estimates as a fallback.
+        -   Displays prices for both cash payments and with insurance.
+        -   Ensures source transparency by displaying where the data came from (e.g., "Data from XYZ Clinic – updated May 2024").
+    -   **Goal:** To bring clarity to healthcare costs and help users find services that meet their financial needs.
+
+3.  **Budget-Based Filtering**
+    -   **Description:** An interactive budget slider that allows users to filter clinics and services based on what they can afford.
+    -   **Functionality:** Users can set a maximum budget, and the interface will dynamically display only the matching clinics and services within that price range.
+    -   **Goal:** To make it easy for users to find healthcare options that fit their personal budget.
+
+4.  **Insurance Plan Recommender**
+    -   **Description:** A feature that recommends suitable insurance plans to users.
+    -   **Functionality:** Based on user inputs (age, nationality, health concerns, frequency of visits), the system will suggest plans. For the initial version, this will be based on a structured dataset or a rule-based mockup.
+    -   **Goal:** To simplify the process of choosing a health insurance plan.
+</context>
+<PRD>
+# User Experience
+-   **Layout:** A simple, clean, and professional layout built with Next.js.
+-   **Key Components:**
+    -   **Hero Section:** A brief explanation of the website's value proposition.
+    -   **Search & Filter:** A primary search bar and the budget slider.
+    -   **Chat Interface:** A chatbot or an "Ask a Health Question" interface for the AI assistant.
+    -   **Results Display:** A dynamic display of matching clinics and services with clear pricing information.
+-   **Compliance & Trust:**
+    -   DHA compliance disclaimers will be present.
+    -   Clear data privacy and consent notices.
+    -   A listing of emergency providers in the website footer.
+
+# Technical Architecture
+-   **Frontend:** Next.js
+-   **Backend Logic:** Next.js API Routes
+-   **AI Engine:** OpenAI API
+-   **Data Sources:**
+    -   Proprietary pricing data from a Google Sheet, accessed via Google Sheets API.
+    -   Web search for fallback pricing data.
+    -   A structured dataset (e.g., JSON file or database) for insurance plans.
+-   **Data Models:**
+    -   **Procedure/Service:** `{ clinicName, serviceName, cashPrice, insuredPrice, acceptedInsurance[], location }`
+    -   **InsurancePlan:** `{ planName, provider, benefits[], premium }`
+
+# Development Roadmap
+-   **Phase 1 (MVP):**
+    1.  Set up the core Next.js application with a basic layout.
+    2.  Integrate the Google Sheet API to fetch and display pricing data.
+    3.  Implement the AI health assistant with the OpenAI API and necessary disclaimers.
+    4.  Create static pages for compliance: disclaimers, privacy policy, and emergency contacts.
+-   **Phase 2 (Post-MVP):**
+    1.  Implement the budget slider for dynamic filtering.
+    2.  Build the web search fallback for pricing data.
+    3.  Develop the insurance recommendation engine with user inputs.
+    4.  Introduce user accounts for saving preferences and searches.
+
+# Logical Dependency Chain
+1.  **Foundation:** Build the basic Next.js application structure and UI shell.
+2.  **Core Functionality:** Connect to the Google Sheet and display pricing data to get a working, visible front-end.
+3.  **AI Integration:** Develop the AI assistant, which can be done in parallel but requires the basic UI to be in place.
+4.  **Interactive Elements:** Add the budget slider to enhance the core pricing feature.
+5.  **New Modules:** Build the insurance recommendation feature as a separate, self-contained module.
+
+# Risks and Mitigations
+-   **Risk:** Inconsistent data format in the Google Sheet.
+    -   **Mitigation:** Enforce a strict data schema and implement validation scripts.
+-   **Risk:** Web search for pricing data may be unreliable or blocked.
+    -   **Mitigation:** Use a professional-grade scraping API or service. Prioritize establishing direct data partnerships with clinics.
+-   **Risk:** Ensuring full DHA compliance.
+    -   **Mitigation:** All AI-generated content must be non-diagnostic. All pricing data must be clearly sourced. All necessary legal disclaimers must be prominently displayed.
+</PRD>

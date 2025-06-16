@@ -1,0 +1,11 @@
+clinicname,servicename,cashprice,insuredprice,acceptedinsurance,location,phone,specialty,rating,partnership_tier
+Dubai Premium Medical Center,Cardiology Consultation,450 AED,300 AED,Dubai Insurance|Emirates Health|AXA Gulf,Dubai Healthcare City,+971 4 123 4567,cardiology,4.8,premium
+Al Zahra Hospital,Dermatology Consultation,350 AED,250 AED,Dubai Insurance|SEHA|Oman Insurance,Al Barsha Dubai,+971 4 378 6666,dermatology,4.6,standard
+American Hospital Dubai,General Consultation,400 AED,280 AED,Dubai Insurance|Emirates Health,Oud Metha Road Dubai,+971 4 336 7777,general medicine,4.9,premium
+Mediclinic City Hospital,Orthopedic Consultation,500 AED,350 AED,Dubai Insurance|AXA Gulf|Cigna,Dubai Healthcare City,+971 4 435 9999,orthopedics,4.7,premium
+NMC Royal Hospital,Neurology Consultation,600 AED,400 AED,Dubai Insurance|Emirates Health,Al Garhoud Dubai,+971 4 267 0000,neurology,4.5,standard
+Dubai London Clinic,Gynecology Consultation,380 AED,280 AED,Dubai Insurance|SEHA,Jumeirah Dubai,+971 4 344 6663,gynecology,4.4,standard
+Aster Hospital,Pediatric Consultation,300 AED,200 AED,Dubai Insurance|Oman Insurance,Al Qusais Dubai,+971 4 270 7000,pediatrics,4.3,basic
+Iranian Hospital,Ophthalmology Consultation,320 AED,220 AED,Dubai Insurance|SEHA,Jumeirah Dubai,+971 4 344 0250,ophthalmology,4.2,basic
+Dubai Bone & Joint Center,Sports Medicine Consultation,550 AED,400 AED,Dubai Insurance|AXA Gulf,Al Wasl Road Dubai,+971 4 349 6666,sports medicine,4.6,standard
+King's College Hospital,ENT Consultation,420 AED,300 AED,Dubai Insurance|Emirates Health|Cigna,Dubai Hills,+971 4 429 9999,ENT,4.8,premium 

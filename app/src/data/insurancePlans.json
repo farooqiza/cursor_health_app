@@ -1,0 +1,37 @@
+[
+  {
+    "planName": "Basic Health",
+    "provider": "Dubai Insurance Co.",
+    "premium": 500,
+    "benefits": ["annual-checkup", "emergency-care"],
+    "eligibility": { "minAge": 18, "maxAge": 65 }
+  },
+  {
+    "planName": "Family First",
+    "provider": "Oman Insurance",
+    "premium": 1500,
+    "benefits": ["annual-checkup", "emergency-care", "dental", "vision"],
+    "eligibility": { "minAge": 0, "maxAge": 60, "requiresFamily": true }
+  },
+  {
+    "planName": "Senior Secure",
+    "provider": "AXA Gulf",
+    "premium": 2000,
+    "benefits": ["annual-checkup", "emergency-care", "chronic-illness-cover"],
+    "eligibility": { "minAge": 60, "maxAge": 80 }
+  },
+  {
+    "planName": "Global Traveler",
+    "provider": "Cigna",
+    "premium": 2500,
+    "benefits": ["annual-checkup", "emergency-care", "international-cover"],
+    "eligibility": { "minAge": 18, "maxAge": 70 }
+  },
+  {
+    "planName": "Essential Plus",
+    "provider": "Sukoon",
+    "premium": 800,
+    "benefits": ["annual-checkup", "emergency-care", "dental"],
+    "eligibility": { "minAge": 18, "maxAge": 65 }
+  }
+] 
