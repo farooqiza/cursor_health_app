@@ -53,48 +53,51 @@ const getProprietaryData = async (specialty?: string): Promise<Procedure[]> => {
   return [];
 };
 
-// Get targeted insurance recommendations
+// Get targeted insurance recommendations from web search
 const getTargetedInsurance = async (specialty?: string, isEmergency: boolean = false): Promise<InsurancePlan[]> => {
-  const prioritizedPlans: InsurancePlan[] = [
-    {
-      planName: "Premium Health Care Plus",
-      provider: "Dubai Health Partners",
-      premium: 2800,
-      benefits: [
-        `Comprehensive coverage for ${specialty || 'all medical'} services`,
-        "Priority appointments at partner facilities",
-        "24/7 emergency support",
-        "Prescription medication coverage",
-      ]
-    },
-    {
-      planName: "Essential Health Shield",
-      provider: "Emirates Medical Insurance", 
-      premium: 1500,
-      benefits: [
-        `Specialized ${specialty || 'medical'} care coverage`,
-        "Emergency care at top hospitals",
-        "Outpatient consultation coverage",
-        "Diagnostic test coverage",
-      ]
+  try {
+    // Create specific search terms based on the medical specialty and emergency status
+    const searchTerms = [];
+    
+    if (isEmergency) {
+      searchTerms.push('emergency-services', 'ambulance-services', 'urgent-care', '24/7-medical-care');
     }
-  ];
-
-  if (isEmergency) {
-    return [{
-      planName: "Emergency Care Plus",
-      provider: "Dubai Emergency Coverage",
-      premium: 1200,
-      benefits: [
-        "Immediate emergency care coverage",
-        "Ambulance services included",
-        "ICU and hospital stay coverage",
-        "24/7 medical helpline"
-      ]
-    }, ...prioritizedPlans];
+    
+    if (specialty) {
+      // Map common specialties to benefit terms
+      const specialtyBenefits: { [key: string]: string[] } = {
+        'cardiology': ['cardiac-care', 'heart-disease-treatment', 'cardiovascular-services'],
+        'orthopedic': ['orthopedic-care', 'bone-joint-treatment', 'sports-medicine'],
+        'dermatology': ['dermatology-care', 'skin-treatment', 'cosmetic-procedures'],
+        'neurology': ['neurological-care', 'brain-treatment', 'nervous-system'],
+        'oncology': ['cancer-treatment', 'oncology-care', 'chemotherapy'],
+        'pediatric': ['pediatric-care', 'children-healthcare', 'child-specialist'],
+        'gynecology': ['women-health', 'gynecological-care', 'reproductive-health'],
+        'dentistry': ['dental-care', 'oral-health', 'dental-treatment'],
+        'ophthalmology': ['eye-care', 'vision-treatment', 'optical-services']
+      };
+      
+      const benefits = specialtyBenefits[specialty.toLowerCase()] || [`${specialty}-care`, 'specialist-consultations'];
+      searchTerms.push(...benefits);
+    }
+    
+    // Always include general benefits
+    searchTerms.push('general-care', 'diagnostic-tests', 'prescription-coverage');
+    
+    // Use the existing insurance search function
+    const insurancePlans = await getInsuranceInfo(searchTerms);
+    
+    if (insurancePlans && insurancePlans.length > 0) {
+      return insurancePlans.slice(0, 3); // Limit to top 3 results
+    }
+    
+    // If no results, try a broader search
+    return await getInsuranceInfo(['general-care', 'health-insurance']);
+  } catch (error) {
+    console.error('Error fetching insurance from web:', error);
+    // Return empty array to force web search in the insurance function
+    return [];
   }
-
-  return prioritizedPlans;
 };
 
 // Emergency facilities
@@ -131,7 +134,7 @@ export async function POST(req: NextRequest) {
               content: `Analyze the user's health query for a Dubai-based assistant. Respond with JSON:
 {
 "isEmergency": boolean,
-"medicalSpecialty": "e.g., cardiology, dermatology",
+"medicalSpecialty": "e.g., cardiology, dermatology, orthopedic, neurology",
 "briefAnswer": "A 2-3 sentence, non-diagnostic answer. Include a disclaimer."
 }`
             },
@@ -145,7 +148,9 @@ export async function POST(req: NextRequest) {
 
         // Step 2: Emergency Check
         if (intentData.isEmergency) {
-          const emergencyFacilities = getEmergencyFacilities();
+          sendUpdate({ type: 'progress', step: 'emergency_search', message: 'Finding emergency facilities...' });
+          
+          const emergencyFacilities = await findEmergencyCare();
           const insurancePlans = await getTargetedInsurance(intentData.medicalSpecialty, true);
           
           sendUpdate({
@@ -159,20 +164,25 @@ export async function POST(req: NextRequest) {
           return;
         }
 
-        // Step 3: Non-Emergency - Get Data
-        sendUpdate({ type: 'progress', step: 'finding_care', message: 'Finding care options...' });
+        // Step 3: Non-Emergency - Get Data from Internet
+        sendUpdate({ type: 'progress', step: 'finding_care', message: 'Searching for healthcare providers...' });
 
+        // First try proprietary data (Google Sheets)
         let regularFacilities = await getProprietaryData(intentData.medicalSpecialty);
+        
+        // If no proprietary data, search the web
         if (regularFacilities.length === 0) {
-          sendUpdate({ type: 'progress', step: 'web_search', message: 'Searching for more options...' });
-          const searchQuery = `${intentData.medicalSpecialty} specialist in Dubai`;
+          sendUpdate({ type: 'progress', step: 'web_search', message: 'Searching the web for specialized providers...' });
+          const searchQuery = `${intentData.medicalSpecialty} specialist in Dubai UAE`;
           regularFacilities = await searchWebForProcedure(searchQuery);
         }
         
+        // Get insurance recommendations from web search
+        sendUpdate({ type: 'progress', step: 'insurance_search', message: 'Finding insurance options...' });
         const insurancePlans = await getTargetedInsurance(intentData.medicalSpecialty, false);
 
         // Step 4: Sales Funnel Response
-        const salesFunnelResponse = `⚠️ **Medical Disclaimer**: This information is for educational purposes only. Please consult a healthcare provider for diagnosis and treatment.\n\n**${intentData.briefAnswer}**\n\n---\n\n**🏥 Would you like help finding the right healthcare provider and insurance for your ${intentData.medicalSpecialty || 'medical'} needs?**\n\n${regularFacilities.length > 0 ? `I've found ${regularFacilities.length} specialized providers.` : `I can help you find qualified providers.`}`;
+        const salesFunnelResponse = `⚠️ **Medical Disclaimer**: This information is for educational purposes only. Please consult a healthcare provider for diagnosis and treatment.\n\n**${intentData.briefAnswer}**\n\n---\n\n**🏥 Would you like help finding the right healthcare provider and insurance for your ${intentData.medicalSpecialty || 'medical'} needs?**\n\n${regularFacilities.length > 0 ? `I've found ${regularFacilities.length} specialized providers from live web search.` : `I can help you find qualified providers through real-time search.`}`;
 
         sendUpdate({
           type: 'complete',
