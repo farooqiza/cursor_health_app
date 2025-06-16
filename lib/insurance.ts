@@ -1,4 +1,3 @@
-import plans from '@/data/insurancePlans.json';
 import NodeCache from 'node-cache';
 
 const insuranceCache = new NodeCache({ stdTTL: 3600 }); // 1 hour cache
@@ -30,7 +29,8 @@ export async function getInsuranceInfo(requiredBenefits: string[]): Promise<Insu
 
   // Fallback to local insurance data
   console.log('[FALLBACK] Using local insurance data');
-  const matchingPlans = plans.filter(plan => 
+  const fallbackPlans = getFallbackInsurance();
+  const matchingPlans = fallbackPlans.filter(plan => 
     requiredBenefits.every(requiredBenefit => plan.benefits.includes(requiredBenefit))
   );
 
