@@ -4,8 +4,9 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
   
   /* Health-centered color palette */
   --emerald-50: #ecfdf5;
@@ -39,14 +40,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
   }
 }
 
 body {
-  background: linear-gradient(135deg, var(--emerald-50) 0%, var(--teal-50) 50%, var(--blue-50) 100%);
-  color: var(--slate-800);
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
   font-family: 'Inter', 'system-ui', sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -549,5 +556,11 @@ input:focus, textarea:focus {
   
   .animate-health-glow {
     animation: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
