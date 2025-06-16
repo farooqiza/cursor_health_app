@@ -174,7 +174,7 @@ const AssistantResponse = ({
                             </svg>
                           </div>
                           <div className="flex-1">
-                            <h4 className="font-semibold text-slate-800 text-sm sm:text-base">{f.name}</h4>
+                            <h4 className="font-semibold text-slate-800 text-sm sm:text-base">{f.clinicname}</h4>
                             {f.address && (
                               <p className="text-slate-600 text-xs sm:text-sm mt-1 flex items-center gap-1">
                                 <svg className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
