@@ -91,10 +91,15 @@ RESPONSE FORMAT:
 
           const results = await Promise.all(promises);
 
-          const emergencyFacilities = results.find(r => r.type === 'emergencyFacilities')?.data || [];
-          const regularFacilities = results.find(r => r.type === 'regularFacilities')?.data || [];
-          const insurancePlans = results.find(r => r.type === 'insurance')?.data || [];
+          const emergencyFacilitiesData = results.find(r => r.type === 'emergencyFacilities')?.data || [];
+          const regularFacilitiesData = results.find(r => r.type === 'regularFacilities')?.data || [];
+          const insurancePlansData = results.find(r => r.type === 'insurance')?.data || [];
           const healthInfo = results.find(r => r.type === 'healthInfo')?.data || 'Please consult a doctor for advice.';
+
+          // Ensure arrays for facility data (handle potential string errors)
+          const emergencyFacilities = Array.isArray(emergencyFacilitiesData) ? emergencyFacilitiesData as EmergencyFacility[] : [];
+          const regularFacilities = Array.isArray(regularFacilitiesData) ? regularFacilitiesData as Procedure[] : [];
+          const insurancePlans = Array.isArray(insurancePlansData) ? insurancePlansData as InsurancePlan[] : [];
 
           sendUpdate({ type: 'progress', step: 'data_collection_complete', message: 'Information gathered.' });
 
