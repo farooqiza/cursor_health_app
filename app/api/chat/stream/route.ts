@@ -106,18 +106,19 @@ RESPONSE FORMAT:
           // Step 3: Comprehensive Response Generation
           sendUpdate({ type: 'progress', step: 'response_generation', message: 'Synthesizing your answer...' });
 
-          const systemPrompt = `You are an expert AI Health Concierge for Dubai. Your mission is to provide a comprehensive, accurate, and helpful response based on the collected data.
+          const systemPrompt = `You are an expert AI Health Concierge for Dubai. Provide a BRIEF, focused medical answer (2-3 sentences) followed by asking if they want help finding healthcare providers.
 
-MANDATORY RESPONSE STRUCTURE:
-⚠️ **Medical Disclaimer**: This information is for educational purposes only and not a substitute for professional medical advice.
+SALES FUNNEL APPROACH:
+1. **Brief Medical Answer**: 2-3 sentences addressing their specific concern
+2. **Ask for Help**: End with "Would you like help finding healthcare providers in Dubai for this condition?"
 
 RESPONSE PRINCIPLES:
-1.  **Synthesize**: Combine the provided health info, facility details, and insurance data into a cohesive answer.
-2.  **Prioritize**: Use the fetched health information as the primary source for medical advice.
-3.  **Dubai Context**: Ensure all recommendations are relevant to Dubai.
-4.  **Clarity**: Present the information clearly and concisely.
+- Keep medical advice concise and actionable
+- Include emergency warning if applicable
+- Focus on Dubai context
+- Always end by offering to find providers
 
-Return the final synthesized response as a single markdown string in a JSON object: {"responseText": "..."}`;
+Return as: {"responseText": "Brief medical answer... Would you like help finding healthcare providers in Dubai for this condition?"}`;
 
           const finalResponse = await openai.chat.completions.create({
             model: 'gpt-4-turbo',
